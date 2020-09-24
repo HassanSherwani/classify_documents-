@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+	<header>
+		<div class="container">
+		<div id="brandname">
+			News Headline Extraction Result
+		</div>
+		<h2>Automated news extraction</h2>
+
+	</div>
+	</header>
+	<p style="color:blue;font-size:20;text-align: center;"><b>Results for Given Comment</b></p>
+	<div class="results">
+
+
+
+	{% if prediction == 1%}
+	<h2 style="color:red;">It's a b type</h2>
+	{% elif prediction == 2%}
+	<h2 style="color:blue;">It's t type</h2>
+	{% if prediction == 3%}
+	<h2 style="color:green;">It's a e type</h2>
+	{% if prediction == 4%}
+	<h2 style="color:pink;">It's a m type</h2>
+
+	{% endif %}
+	</div>
+
+
+
+	<a href="..">
+	<input type="submit" value="Go Back..">
+	</a>
+
+</body>
+</html>
