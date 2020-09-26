@@ -1,14 +1,18 @@
+#1- Import key modules
 from flask import Flask, render_template, url_for, request
-import pandas as pd
 import pickle
+import pandas as pd
+import nltk
+import re
+from sklearn.feature_extraction.text import TfidfTransformer
 
-
+# 2- Start script
 app = Flask(__name__)
-
-filename = 'finalized_model.sav'
+# load saved models
+filename = 'savedmodel/linearsvc_model.sav'
 loaded_model = pickle.load(open(filename, 'rb'))
-filename2 = 'countvectorizer.sav'
-cv = pickle.load(open(filename2, 'rb'))
+filename2 = 'savedmodel/tfidf.sav'
+tfidf = pickle.load(open(filename2, 'rb'))
 
 @app.route('/')
 def home():
@@ -19,16 +23,15 @@ def predict():
     if request.method == 'POST':
         message = request.form['message']
         data = [message]
-        vect = pd.DataFrame(cv.transform(data).toarray())
-        my_prediction = loaded_model.predict(vect)
-        score=loaded_model.predict_proba(vect)
+        vect = pd.DataFrame(tfidf.transform(data).toarray())
+        predict_class = loaded_model.predict(vect)
+        score=loaded_model._predict_proba_lr(vect)
         prob=score.max(axis=1)
 
-        # using dataframe
+        # using dataframe to jsonify end point
         result=data
-        result=pd.DataFrame(result,columns=["text"])
-        result["news-type"]=my_prediction
-        result["news-type"]=result['news-type'].map({1 : "b", 2 : "t", 3 :"e", 4:"m"})
+        result=pd.DataFrame(result,columns=["newsheadline"])
+        result["news-type"]=predict_class
         result["probability"]=prob
         json_table = result.to_json(orient='records')
     return app.response_class(
@@ -39,4 +42,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
