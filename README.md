@@ -15,7 +15,7 @@ pip install -r requirements.txt
  python train.py
  ```
  
- - 3.Run application
+ - 3. Run application
  
  ```bash
  
